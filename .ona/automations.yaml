@@ -1,0 +1,28 @@
+tasks:
+  build:
+    name: Build
+    description: Resolve dependencies and compile the project (skips tests).
+    command: |
+      ./mvnw -B clean package -DskipTests
+    triggeredBy:
+      - postDevcontainerStart
+
+  test:
+    name: Test
+    description: Run the test suite.
+    command: |
+      ./mvnw -B test
+    triggeredBy:
+      - manual
+
+services:
+  spring-boot:
+    name: Spring Boot
+    description: Run the Spring Boot application with live reload.
+    commands:
+      start: |
+        ./mvnw -B spring-boot:run
+      ready: |
+        until (exec 3<>/dev/tcp/localhost/8080) 2>/dev/null; do sleep 1; done
+    triggeredBy:
+      - manual
