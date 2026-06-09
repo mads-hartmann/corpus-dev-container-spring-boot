@@ -1,0 +1,13 @@
+// The Dev Container format allows you to configure your environment.
+// See https://aka.ms/devcontainer.json for more information.
+{
+	"name": "Spring Boot (Java 21)",
+	"image": "mcr.microsoft.com/devcontainers/java:21",
+	"forwardPorts": [8080],
+	"portsAttributes": {
+		"8080": {
+			"label": "Spring Boot",
+			"onAutoForward": "notify"
+		}
+	}
+}
