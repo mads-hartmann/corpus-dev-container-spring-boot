@@ -1,0 +1,34 @@
+tasks:
+  installDeps:
+    name: Install dependencies
+    description: Resolve and download Maven dependencies for offline use.
+    command: |
+      ./mvnw -B dependency:go-offline
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+
+  build:
+    name: Build
+    description: Compile and package the Spring Boot application.
+    command: |
+      ./mvnw -B clean package -DskipTests
+    triggeredBy:
+      - manual
+    dependsOn:
+      - installDeps
+
+services:
+  springBootApp:
+    name: Spring Boot App
+    description: Run the Spring Boot application server.
+    triggeredBy:
+      - manual
+      - postEnvironmentStart
+    commands:
+      start: |
+        ona environment port open 8080 --dont-wait --admission creator_only --name "Spring Boot App"
+        ./mvnw -B spring-boot:run
+      ready: |
+        curl -s -o /dev/null http://localhost:8080
